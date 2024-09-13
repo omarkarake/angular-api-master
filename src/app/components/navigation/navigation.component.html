@@ -1,3 +1,39 @@
-<div class="w-full">
-    <p class="">Blog Post</p>
+<div
+  class="w-full bg-bg-secondary py-2 px-4 flex items-center justify-between md:flex-row flex-col"
+>
+  <!-- Left Section: Logo or Title -->
+  <div class="flex-shrink-0 mb-2 md:mb-0 cursor-pointer">
+    <p class="text-black text-xl font-bold">Blog Post</p>
+  </div>
+
+  <!-- Center Section: Navigation Links and Search Icon -->
+  <div class="flex items-center justify-between space-x-4 w-[80%]">
+    <div class="flex items-center gap-4">
+      <p
+        class="cursor-pointer hover:text-gray-300"
+        [ngClass]="{
+          'text-blue-color': activeLink === 'home',
+          'text-footer-text': activeLink !== 'home'
+        }"
+        (click)="setActiveLink('home')"
+      >
+        Home
+      </p>
+      <p
+        class="cursor-pointer hover:text-gray-300"
+        [ngClass]="{
+          'text-blue-color': activeLink === 'single',
+          'text-footer-text': activeLink !== 'single'
+        }"
+        (click)="setActiveLink('single')"
+      >
+        Single
+      </p>
+    </div>
+    <img
+      src="assets/search.svg"
+      alt="search"
+      class="w-5 h-5 cursor-pointer hover:opacity-80"
+    />
+  </div>
 </div>

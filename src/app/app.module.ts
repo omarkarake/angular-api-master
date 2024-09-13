@@ -11,7 +11,7 @@ import { CardComponent } from './components/card/card.component';
 import { PostModalComponent } from './modal/post-modal/post-modal.component';
 import { PaginationComponent } from './pagination/pagination/pagination.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -24,7 +24,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
     PostModalComponent,
     PaginationComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule],
+  imports: [BrowserModule, AppRoutingModule, HttpClientModule],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],

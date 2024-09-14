@@ -1,25 +1,36 @@
-<div class="py-16 px-10 flex flex-col gap-5">
-  <div>
-    <div
-      *ngIf="post"
-      class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md"
-    >
-      <h2 class="text-2xl font-bold text-gray-800 mb-4">{{ post.title }}</h2>
-      <p class="text-gray-600">{{ post.body }}</p>
+<div class="py-16 px-10">
+  <div *ngIf="isLoading" class="flex justify-center items-center h-64">
+    <p class="text-lg text-gray-500">Loading...</p>
+  </div>
+  <div *ngIf="!isLoading && post" class="py-16 px-10 flex flex-col gap-5">
+    <div>
+      <div
+        *ngIf="post"
+        class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md"
+      >
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">{{ post.title }}</h2>
+        <p class="text-gray-600">{{ post.body }}</p>
+      </div>
+      <div *ngIf="!post" class="flex justify-center items-center h-64">
+        <p class="text-lg text-gray-500">Loading...</p>
+      </div>
     </div>
-    <div *ngIf="!post" class="flex justify-center items-center h-64">
-      <p class="text-lg text-gray-500">Loading...</p>
+    <div class="flex items-center justify-evenly w-full">
+      <div class="cursor-pointer" *ngIf="!isLoading && post.id === id">
+        <img src="assets/view.svg" alt="view" class="w-10 h-w-10" />
+      </div>
+      <div class="cursor-pointer">
+        <img src="assets/update.svg" alt="update" class="w-10 h-w-10" />
+      </div>
+      <div class="cursor-pointer">
+        <img src="assets/delete.svg" alt="delete" class="w-10 h-w-10" />
+      </div>
     </div>
   </div>
-  <div class="flex items-center justify-evenly w-full">
-    <div class="cursor-pointer">
-      <img src="assets/view.svg" alt="view" class="w-10 h-w-10" />
-    </div>
-    <div class="cursor-pointer">
-      <img src="assets/update.svg" alt="update" class="w-10 h-w-10" />
-    </div>
-    <div class="cursor-pointer">
-      <img src="assets/delete.svg" alt="delete" class="w-10 h-w-10" />
-    </div>
+  <div
+    *ngIf="!isLoading && !post"
+    class="flex justify-center items-center h-64"
+  >
+    <p class="text-lg text-gray-500">Post not found.</p>
   </div>
 </div>

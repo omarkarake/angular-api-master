@@ -4,7 +4,8 @@ import {
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
 } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { tap, finalize } from 'rxjs/operators';
 import { ApiClientService } from '../../services/api-client.service';
 import { Post } from '../../models/post.model';
 
@@ -12,6 +13,10 @@ import { Post } from '../../models/post.model';
   providedIn: 'root',
 })
 export class PostDetailResolver implements Resolve<Post> {
+  private loadingSubject = new BehaviorSubject<boolean>(false);
+  loading$ = this.loadingSubject.asObservable();
+  id: number | undefined;
+
   constructor(private apiClientService: ApiClientService) {}
 
   resolve(
@@ -19,6 +24,13 @@ export class PostDetailResolver implements Resolve<Post> {
     state: RouterStateSnapshot
   ): Observable<Post> {
     const postId = route.paramMap.get('id');
-    return this.apiClientService.getPost(+postId!);
+    this.id = +postId!;
+    console.log(this.id, ": in resolver");
+    this.loadingSubject.next(true); // Set loading state to true
+
+    return this.apiClientService.getPost(+postId!).pipe(
+      tap(() => this.loadingSubject.next(false)), // Set loading state to false on success
+      finalize(() => this.loadingSubject.next(false)) // Ensure loading state is false on completion
+    );
   }
 }

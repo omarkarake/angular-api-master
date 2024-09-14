@@ -1,1 +1,77 @@
-<p>footer works!</p>
+<div class="flex flex-col lg:items-center bg-bg-secondary">
+  <div class="flex flex-col items-center">
+    <p class="text-footer-text text-lg font-bold mb-4">
+      Subscribe to our newsletter
+    </p>
+    <div class="flex border-[1px] justify-between rounded-xl">
+      <div class="w-[10%] flex justify-center items-center">
+        <img src="assets/mail.svg" alt="mail" class="w-5 h-5" />
+      </div>
+      <div class="w-[50%]">
+        <app-inputs [placeholder]="'Enter email...'"></app-inputs>
+      </div>
+      <div class="w-[40%] flex justify-end">
+        <app-button></app-button>
+      </div>
+    </div>
+  </div>
+  <div class="py-8 px-4 lg:w-[700px]">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+      <!-- Product Section -->
+      <div>
+        <h3 class="text-footer-text text-lg font-bold mb-4">Product</h3>
+        <ul class="space-y-2 text-footer-text text-small">
+          <li><a href="#" class="hover:text-blue-color">Features</a></li>
+          <li><a href="#" class="hover:text-blue-color">Pricing</a></li>
+        </ul>
+      </div>
+
+      <!-- Resources Section -->
+      <div>
+        <h3 class="text-footer-text text-lg font-bold mb-4">Resources</h3>
+        <ul class="space-y-2 text-footer-text text-small">
+          <li><a href="#" class="hover:text-blue-color">Blog</a></li>
+          <li><a href="#" class="hover:text-blue-color">User guides</a></li>
+          <li><a href="#" class="hover:text-blue-color">Webinars</a></li>
+        </ul>
+      </div>
+
+      <!-- Company Section -->
+      <div>
+        <h3 class="text-footer-text text-lg font-bold mb-4">Company</h3>
+        <ul class="space-y-2 text-footer-text text-small">
+          <li><a href="#" class="hover:text-blue-color">About us</a></li>
+          <li><a href="#" class="hover:text-blue-color">Contact us</a></li>
+        </ul>
+      </div>
+
+      <!-- Plans & Pricing Section -->
+      <div>
+        <h3 class="text-footer-text text-lg font-bold mb-4">Plans & Pricing</h3>
+        <ul class="space-y-2 text-footer-text text-small">
+          <li><a href="#" class="hover:text-blue-color">Personal</a></li>
+          <li><a href="#" class="hover:text-blue-color">Start up</a></li>
+          <li><a href="#" class="hover:text-blue-color">Organization</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="w-full p-3 flex flex-col gap-3 lg:flex-row lg:gap-0 justify-between items-center">
+    <div class="flex items-center">
+      <p>English</p>
+      <img src="assets/arrow-down.svg" alt="arrow down" class="w-4 h-4" />
+    </div>
+    <div class="flex items-center gap-2">
+      <p>© 2024 Brand, Inc.</p>
+      <p>• Privacy</p>
+      <p>• Terms</p>
+      <p>• Site Map</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <img src="assets/facebook.svg" alt="facebook" class="w-5 h-5" />
+      <img src="assets/twitter.svg" alt="twitter" class="w-5 h-5" />
+      <img src="assets/linkedin.svg" alt="linkedin" class="w-5 h-5" />
+      <img src="assets/instagram.svg" alt="instagram" class="w-5 h-5" />
+    </div>
+  </div>
+</div>

@@ -5,7 +5,7 @@ import {
   HttpHeaders,
 } from '@angular/common/http';
 import { Observable, throwError, BehaviorSubject, of } from 'rxjs';
-import { catchError, map, retry, tap } from 'rxjs/operators';
+import { catchError, finalize, map, retry, tap } from 'rxjs/operators';
 import { Post } from '../models/post.model';
 import { ToastrService } from 'ngx-toastr';
 import { Comment } from '../models/comment.model';
@@ -30,14 +30,18 @@ export class ApiClientService {
   private pageSize = 5;
   private modalOpenSubject = new BehaviorSubject<boolean>(false);
   private postToUpdateSubject = new BehaviorSubject<Post | null>(null);
+  private loadingPostSubject = new BehaviorSubject<boolean>(false);
+  loadingPosts$ = this.loadingPostSubject.asObservable();
 
   constructor(private http: HttpClient, private toastr: ToastrService) {}
 
   // GET: Fetch all posts
   getPosts(): Observable<Post[]> {
+    this.loadingPostSubject.next(true);
     return this.http.get<Post[]>(this.API_URL).pipe(
       retry(3), // Retry up to 3 times before failing
-      catchError(this.handleError.bind(this))
+      catchError(this.handleError.bind(this)), // Handle errors
+      finalize(() => this.loadingPostSubject.next(false)) // Set loading state to false on success
     );
   }
 

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiClientService } from '../../../services/api-client.service';
 import { Post } from '../../../models/post.model';
 import { PostDetailResolver } from '../../../feature/post-detail/post-detail-resolver.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -16,6 +17,7 @@ export class HomeComponent implements OnInit {
   isLoading: boolean = false;
   loadingPostId: number | null = null; // Track the loading state for each post
   deletingPostId: number | null = null;
+  loadingPosts$: Observable<boolean> | undefined;
 
   constructor(
     private apiClientService: ApiClientService,
@@ -24,6 +26,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.apiClientService.initializePosts();
+    this.loadingPosts$ = this.apiClientService.loadingPosts$;
     this.apiClientService.getPaginatedPosts().subscribe((posts) => {
       this.paginatedPosts = posts;
       this.totalPages = Math.ceil(100 / this.pageSize); // Replace 100 with the actual total number of posts

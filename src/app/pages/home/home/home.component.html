@@ -1,7 +1,10 @@
 <div class="flex justify-center">
   <div class="h-auto py-5 px-5 w-[90%]">
     <h2 class="text-text-medium font-bold mb-4 text-blue-color">Posts</h2>
-    <div *ngIf="paginatedPosts.length > 0">
+    <div *ngIf="paginatedPosts.length === 0 && !(loadingPosts$ | async)">
+      <p class="text-lg text-gray-500">No posts found.</p>
+    </div>
+    <div *ngIf="!(loadingPosts$ | async) && paginatedPosts.length > 0">
       <div>
         <ul class="space-y-4">
           <li
@@ -56,7 +59,7 @@
       ></app-pagination>
     </div>
     <div
-      *ngIf="paginatedPosts.length <= 0"
+      *ngIf="loadingPosts$ | async"
       class="flex flex-col gap-3 lg:flex-row justify-center items-center h-64"
     >
       <p class="text-lg text-gray-500">Loading Posts...</p>

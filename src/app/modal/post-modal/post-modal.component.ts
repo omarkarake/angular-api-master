@@ -13,6 +13,8 @@ export class PostModalComponent implements OnInit {
   @Output() closeModal = new EventEmitter<void>();
   postForm: FormGroup;
   isUpdateMode: boolean = false;
+  isModalOpen: boolean = false;
+  isLoading: boolean = false; // Track loading state
 
   constructor(
     private fb: FormBuilder,
@@ -33,15 +35,18 @@ export class PostModalComponent implements OnInit {
 
   onSubmit(): void {
     if (this.postForm.valid) {
+      this.isLoading = true; // Start loading
       if (this.isUpdateMode && this.post) {
-        this.apiClientService
-          .updatePost(this.post.id, this.postForm.value)
-          .subscribe(() => {
-            this.closeModal.emit();
-          });
+        this.apiClientService.updatePost(this.post.id, this.postForm.value).subscribe(() => {
+          this.isLoading = false; // Stop loading
+          this.isModalOpen = false;
+          setTimeout(() => this.closeModal.emit(), 300);
+        });
       } else {
         this.apiClientService.createPost(this.postForm.value).subscribe(() => {
-          this.closeModal.emit();
+          this.isLoading = false; // Stop loading
+          this.isModalOpen = false;
+          setTimeout(() => this.closeModal.emit(), 300);
         });
       }
     }

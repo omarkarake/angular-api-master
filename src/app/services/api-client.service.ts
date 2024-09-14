@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
+import { catchError, retry, tap } from 'rxjs/operators';
 import { Post } from '../models/post.model';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
@@ -23,13 +24,13 @@ export class ApiClientService {
   private modalOpenSubject = new BehaviorSubject<boolean>(false);
   private postToUpdateSubject = new BehaviorSubject<Post | null>(null);
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toastr: ToastrService) {}
 
   // GET: Fetch all posts
   getPosts(): Observable<Post[]> {
     return this.http.get<Post[]>(this.API_URL).pipe(
       retry(3), // Retry up to 3 times before failing
-      catchError(this.handleError)
+      catchError(this.handleError.bind(this))
     );
   }
 
@@ -69,28 +70,37 @@ export class ApiClientService {
   getPost(id: number): Observable<Post> {
     return this.http
       .get<Post>(`${this.API_URL}/${id}`)
-      .pipe(retry(3), catchError(this.handleError));
+      .pipe(retry(3), catchError(this.handleError.bind(this)));
   }
 
   // POST: Create a new post
   createPost(post: Post): Observable<Post> {
     return this.http
       .post<Post>(this.API_URL, post, this.httpOptions)
-      .pipe(catchError(this.handleError));
+      .pipe(
+        tap(() => this.toastr.success('Post created successfully!')),
+        catchError(this.handleError.bind(this))
+      );
   }
 
   // PUT: Update an existing post
   updatePost(id: number, post: Post): Observable<Post> {
     return this.http
       .put<Post>(`${this.API_URL}/${id}`, post, this.httpOptions)
-      .pipe(catchError(this.handleError));
+      .pipe(
+        tap(() => this.toastr.success('Post updated successfully!')),
+        catchError(this.handleError.bind(this))
+      );
   }
 
   // DELETE: Delete a post by ID
   deletePost(id: number): Observable<void> {
     return this.http
       .delete<void>(`${this.API_URL}/${id}`, this.httpOptions)
-      .pipe(catchError(this.handleError));
+      .pipe(
+        tap(() => this.toastr.success('Post deleted successfully!')),
+        catchError(this.handleError.bind(this))
+      );
   }
 
   // Modal state management
@@ -121,6 +131,7 @@ export class ApiClientService {
       // Server-side errors
       errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
     }
+    this.toastr.error(errorMessage, 'Error');
     console.error(errorMessage);
     return throwError(() => new Error(errorMessage));
   }

@@ -23,7 +23,7 @@ export class ApiClientService {
   private postsSubject = new BehaviorSubject<Post[]>([]);
   private paginatedPostsSubject = new BehaviorSubject<Post[]>([]);
   private currentPage = 1;
-  private pageSize = 10;
+  private pageSize = 5;
 
   constructor(private http: HttpClient) {}
 

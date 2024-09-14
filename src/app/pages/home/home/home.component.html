@@ -1,1 +1,39 @@
-<p>home works!</p>
+<div class="flex justify-center">
+  <div class="h-auto py-5 px-5 w-[90%]">
+    <h2 class="text-text-medium font-bold mb-4 text-blue-color">Posts</h2>
+    <div class="">
+      <div>
+        <ul class="space-y-4">
+          <li
+            *ngFor="let post of paginatedPosts"
+            class="p-4 bg-bg-secondary rounded shadow flex flex-col lg:flex-row items-center transform hover:scale-x-105 transition duration-150"
+          >
+            <div class="w-[90%]">
+              <h3 class="text-text-medium font-bold">{{ post.title }}</h3>
+              <p class="text-text-secondary">
+                {{ post.body | truncate : 100 }}
+              </p>
+            </div>
+            <div class="flex items-center justify-evenly w-full lg:w-[20%]">
+              <div class="cursor-pointer">
+                <img src="assets/view.svg" alt="view" class="w-10 h-w-10" />
+              </div>
+              <div class="cursor-pointer">
+                <img src="assets/update.svg" alt="update" class="w-10 h-w-10" />
+              </div>
+              <div class="cursor-pointer">
+                <img src="assets/delete.svg" alt="delete" class="w-10 h-w-10" />
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <app-pagination
+      [currentPage]="currentPage"
+      [totalPages]="totalPages"
+      (pageChange)="onPageChange($event)"
+    ></app-pagination>
+  </div>
+</div>

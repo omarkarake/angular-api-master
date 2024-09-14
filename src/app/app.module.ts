@@ -13,6 +13,7 @@ import { PaginationComponent } from './pagination/pagination/pagination.componen
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './pages/home/home/home.component';
+import { TruncatePipe } from '../pipe/truncate.pipe';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { HomeComponent } from './pages/home/home/home.component';
     CardComponent,
     PostModalComponent,
     PaginationComponent,
-    HomeComponent
+    HomeComponent,
+    TruncatePipe
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule],
   providers: [

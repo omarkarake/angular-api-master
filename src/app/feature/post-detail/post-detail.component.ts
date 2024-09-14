@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Post } from '../../models/post.model';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PostDetailResolver } from './post-detail-resolver.service';
+import { ApiClientService } from '../../services/api-client.service';
 
 @Component({
   selector: 'app-post-detail',
@@ -12,10 +13,13 @@ export class PostDetailComponent implements OnInit {
   post: Post | undefined;
   isLoading: boolean = false;
   id: number | undefined;
+  deletingPostId: number | null = null;
 
   constructor(
     private route: ActivatedRoute,
-    private resolver: PostDetailResolver
+    private router: Router,
+    private resolver: PostDetailResolver,
+    private apiClientService: ApiClientService
   ) {}
 
   ngOnInit(): void {
@@ -27,5 +31,19 @@ export class PostDetailComponent implements OnInit {
       this.post = data['post'];
     });
     console.log(this.post);
+  }
+
+  deletePost(postId: number): void {
+    this.deletingPostId = postId;
+    this.apiClientService.deletePost(postId).subscribe({
+      next: () => {
+        this.deletingPostId = null;
+        this.router.navigate(['/home']);
+      },
+      error: (err) => {
+        console.error('Error deleting post:', err);
+        this.deletingPostId = null;
+      },
+    });
   }
 }

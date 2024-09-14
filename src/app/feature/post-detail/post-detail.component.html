@@ -16,14 +16,34 @@
       </div>
     </div>
     <div class="flex items-center justify-evenly w-full">
-      <div class="cursor-pointer" *ngIf="!isLoading && post.id === id">
-        <img src="assets/view.svg" alt="view" class="w-10 h-w-10" />
+      <div class="cursor-pointer flex items-center gap-3">
+        <img
+          src="assets/update.svg"
+          alt="update"
+          class="w-10 h-w-10 transform hover:scale-110 transition duration-150"
+        />
+        <p>Edit</p>
       </div>
-      <div class="cursor-pointer">
-        <img src="assets/update.svg" alt="update" class="w-10 h-w-10" />
+      <div
+        class="cursor-pointer flex items-center gap-3"
+        (click)="deletePost(post.id)"
+        *ngIf="deletingPostId !== post.id"
+      >
+        <img
+          src="assets/delete.svg"
+          alt="delete"
+          class="w-10 h-w-10 transform hover:scale-110 transition duration-150"
+        />
+        <p>delete</p>
       </div>
-      <div class="cursor-pointer">
-        <img src="assets/delete.svg" alt="delete" class="w-10 h-w-10" />
+      <div
+        *ngIf="deletingPostId === post.id"
+        class="cursor-pointer flex items-center gap-3"
+      >
+        <div
+          class="loader ease-linear rounded-full border-8 border-t-8 border-red-500 h-10 w-10"
+        ></div>
+        <p>delete</p>
       </div>
     </div>
   </div>

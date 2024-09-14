@@ -15,7 +15,10 @@
               </p>
             </div>
             <div class="flex items-center justify-evenly w-full lg:w-[20%]">
-              <div class="cursor-pointer">
+              <div
+                class="cursor-pointer"
+                [routerLink]="['/view-post', post.id]"
+              >
                 <img src="assets/view.svg" alt="view" class="w-10 h-w-10" />
               </div>
               <div class="cursor-pointer">

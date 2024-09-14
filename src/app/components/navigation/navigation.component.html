@@ -2,7 +2,7 @@
   class="w-full bg-bg-secondary py-2 px-4 flex items-center justify-between md:flex-row flex-col"
 >
   <!-- Left Section: Logo or Title -->
-  <div class="flex-shrink-0 mb-2 md:mb-0 cursor-pointer">
+  <div class="flex-shrink-0 mb-2 md:mb-0 cursor-pointer" [routerLink]="['']">
     <p class="text-black text-xl font-bold">Blog Post</p>
   </div>
 
@@ -15,7 +15,7 @@
           'text-blue-color': activeLink === 'home',
           'text-footer-text': activeLink !== 'home'
         }"
-        (click)="setActiveLink('home')"
+        [routerLink]="['/home']"
       >
         Home
       </p>
@@ -25,7 +25,6 @@
           'text-blue-color': activeLink === 'single',
           'text-footer-text': activeLink !== 'single'
         }"
-        (click)="setActiveLink('single')"
       >
         Single
       </p>

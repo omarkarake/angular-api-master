@@ -16,7 +16,10 @@
       </div>
     </div>
     <div class="flex items-center justify-evenly w-full">
-      <div class="cursor-pointer flex items-center gap-3">
+      <div
+        class="cursor-pointer flex items-center gap-3"
+        (click)="openModal(post)"
+      >
         <img
           src="assets/update.svg"
           alt="update"

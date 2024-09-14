@@ -1,25 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import { Post } from '../../models/post.model';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PostDetailResolver } from './post-detail-resolver.service';
+import { Post } from '../../models/post.model';
 import { ApiClientService } from '../../services/api-client.service';
+import { PostDetailResolver } from './post-detail-resolver.service';
 
 @Component({
   selector: 'app-post-detail',
   templateUrl: './post-detail.component.html',
-  styleUrls: ['./post-detail.component.css'], // Corrected 'styleUrl' to 'styleUrls'
+  styleUrls: ['./post-detail.component.css'],
 })
 export class PostDetailComponent implements OnInit {
   post: Post | undefined;
   isLoading: boolean = false;
   id: number | undefined;
-  deletingPostId: number | null = null;
+  deletingPostId: number | null = null; // Track the deleting state for each post
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
-    private resolver: PostDetailResolver,
-    private apiClientService: ApiClientService
+    private router: Router, // Inject Router service
+    private apiClientService: ApiClientService,
+    private resolver: PostDetailResolver
   ) {}
 
   ngOnInit(): void {
@@ -35,15 +35,13 @@ export class PostDetailComponent implements OnInit {
 
   deletePost(postId: number): void {
     this.deletingPostId = postId;
-    this.apiClientService.deletePost(postId).subscribe({
-      next: () => {
-        this.deletingPostId = null;
-        this.router.navigate(['/home']);
-      },
-      error: (err) => {
-        console.error('Error deleting post:', err);
-        this.deletingPostId = null;
-      },
+    this.apiClientService.deletePost(postId).subscribe(() => {
+      this.deletingPostId = null;
+      this.router.navigate(['/home']); // Navigate to home page after successful deletion
     });
+  }
+
+  openModal(post: Post | null = null): void {
+    this.apiClientService.openModal(post);
   }
 }

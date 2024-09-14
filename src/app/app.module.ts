@@ -12,6 +12,7 @@ import { PostModalComponent } from './modal/post-modal/post-modal.component';
 import { PaginationComponent } from './pagination/pagination/pagination.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HomeComponent } from './pages/home/home/home.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
     CardComponent,
     PostModalComponent,
     PaginationComponent,
+    HomeComponent
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule],
   providers: [

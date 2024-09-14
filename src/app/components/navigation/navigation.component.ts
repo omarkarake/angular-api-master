@@ -9,6 +9,7 @@ import { filter } from 'rxjs/operators';
 })
 export class NavigationComponent implements OnInit {
   activeLink: string = 'home'; // Default active link
+  isViewPostRoute: boolean = false;
 
   constructor(private router: Router) {}
 

@@ -15,6 +15,7 @@ export class HomeComponent implements OnInit {
   pageSize = 5;
   isLoading: boolean = false;
   loadingPostId: number | null = null; // Track the loading state for each post
+  deletingPostId: number | null = null;
 
   constructor(
     private apiClientService: ApiClientService,
@@ -37,5 +38,13 @@ export class HomeComponent implements OnInit {
   onPageChange(page: number): void {
     this.currentPage = page;
     this.apiClientService.goToPage(page);
+  }
+
+  deletePost(postId: number): void {
+    this.deletingPostId = postId;
+    this.apiClientService.deletePost(postId).subscribe(() => {
+      this.paginatedPosts = this.paginatedPosts.filter(post => post.id !== postId);
+      this.deletingPostId = null;
+    });
   }
 }

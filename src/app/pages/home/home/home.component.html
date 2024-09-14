@@ -6,7 +6,8 @@
         <ul class="space-y-4">
           <li
             *ngFor="let post of paginatedPosts"
-            class="p-4 bg-bg-secondary rounded shadow flex flex-col lg:flex-row items-center transform hover:scale-x-105 transition duration-150"
+            class="p-4 bg-bg-secondary rounded shadow flex flex-col lg:flex-row items-center transform hover:scale-x-105 transition duration-150 cursor-pointer"
+            [routerLink]="['/view-post', post.id]"
           >
             <div class="w-[90%]">
               <h3 class="text-text-medium font-bold">{{ post.title }}</h3>
@@ -16,7 +17,7 @@
             </div>
             <div class="flex items-center justify-evenly w-full lg:w-[20%]">
               <div
-                class="cursor-pointer"
+                class="cursor-pointer transform hover:scale-110"
                 [routerLink]="['/view-post', post.id]"
                 *ngIf="!isLoading || loadingPostId !== post.id"
               >
@@ -30,11 +31,20 @@
                   class="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-10 w-10"
                 ></div>
               </div>
-              <div class="cursor-pointer">
-                <img src="assets/update.svg" alt="update" class="w-10 h-w-10" />
-              </div>
-              <div class="cursor-pointer">
+              <div
+                class="cursor-pointer transform hover:scale-110"
+                (click)="deletePost(post.id)"
+                *ngIf="deletingPostId !== post.id"
+              >
                 <img src="assets/delete.svg" alt="delete" class="w-10 h-w-10" />
+              </div>
+              <div
+                *ngIf="deletingPostId === post.id"
+                class="flex justify-center items-center"
+              >
+                <div
+                  class="loader ease-linear rounded-full border-8 border-t-8 border-red-500 h-10 w-10"
+                ></div>
               </div>
             </div>
           </li>

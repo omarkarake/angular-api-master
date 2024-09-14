@@ -1,3 +1,8 @@
 <app-navigation></app-navigation>
 <router-outlet></router-outlet>
 <app-footer></app-footer>
+<app-post-modal
+  *ngIf="isModalOpen"
+  [post]="postToUpdate"
+  (closeModal)="closeModal()"
+></app-post-modal>

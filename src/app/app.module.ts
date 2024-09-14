@@ -14,6 +14,7 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './pages/home/home/home.component';
 import { TruncatePipe } from '../pipe/truncate.pipe';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,7 @@ import { TruncatePipe } from '../pipe/truncate.pipe';
     HomeComponent,
     TruncatePipe
   ],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule],
+  imports: [BrowserModule, AppRoutingModule, HttpClientModule, ReactiveFormsModule],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],

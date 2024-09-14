@@ -1,1 +1,41 @@
-<p>post-modal works!</p>
+<div
+  class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+  (click)="onClose()"
+>
+  <div
+    class="bg-white p-6 rounded-lg shadow-lg w-96"
+    (click)="$event.stopPropagation()"
+  >
+    <h2 class="text-2xl font-bold mb-4">
+      {{ isUpdateMode ? "Update Post" : "Create Post" }}
+    </h2>
+    <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
+      <div class="mb-4">
+        <label class="block text-gray-700">Title</label>
+        <input
+          formControlName="title"
+          class="w-full p-2 border border-gray-300 rounded mt-1"
+        />
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700">Body</label>
+        <textarea
+          formControlName="body"
+          class="w-full p-2 border border-gray-300 rounded mt-1"
+        ></textarea>
+      </div>
+      <div class="flex justify-end">
+        <button
+          type="button"
+          class="mr-2 px-4 py-2 bg-gray-300 rounded"
+          (click)="onClose()"
+        >
+          Cancel
+        </button>
+        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">
+          {{ isUpdateMode ? "Update" : "Create" }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

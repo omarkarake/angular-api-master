@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpHeaders,
-} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
-import { catchError, retry, map } from 'rxjs/operators';
+import { catchError, retry } from 'rxjs/operators';
 import { Post } from '../models/post.model';
 
 @Injectable({
@@ -24,6 +20,8 @@ export class ApiClientService {
   private paginatedPostsSubject = new BehaviorSubject<Post[]>([]);
   private currentPage = 1;
   private pageSize = 5;
+  private modalOpenSubject = new BehaviorSubject<boolean>(false);
+  private postToUpdateSubject = new BehaviorSubject<Post | null>(null);
 
   constructor(private http: HttpClient) {}
 
@@ -93,6 +91,24 @@ export class ApiClientService {
     return this.http
       .delete<void>(`${this.API_URL}/${id}`, this.httpOptions)
       .pipe(catchError(this.handleError));
+  }
+
+  // Modal state management
+  openModal(post: Post | null = null): void {
+    this.postToUpdateSubject.next(post);
+    this.modalOpenSubject.next(true);
+  }
+
+  closeModal(): void {
+    this.modalOpenSubject.next(false);
+  }
+
+  getModalState(): Observable<boolean> {
+    return this.modalOpenSubject.asObservable();
+  }
+
+  getPostToUpdate(): Observable<Post | null> {
+    return this.postToUpdateSubject.asObservable();
   }
 
   // Error handling

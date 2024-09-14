@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { ApiClientService } from '../../services/api-client.service';
 
 @Component({
   selector: 'app-navigation',
@@ -11,11 +12,14 @@ export class NavigationComponent implements OnInit {
   activeLink: string = 'home'; // Default active link
   isViewPostRoute: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private apiClientService: ApiClientService
+  ) {}
 
   ngOnInit(): void {
     this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
+      .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: any) => {
         const navEndEvent = event as NavigationEnd;
         if (navEndEvent.urlAfterRedirects.startsWith('/home')) {
@@ -28,5 +32,9 @@ export class NavigationComponent implements OnInit {
 
   setActiveLink(link: string) {
     this.activeLink = link;
+  }
+
+  openModal(): void {
+    this.apiClientService.openModal();
   }
 }

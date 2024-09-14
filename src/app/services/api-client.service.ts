@@ -4,7 +4,7 @@ import {
   HttpErrorResponse,
   HttpHeaders,
 } from '@angular/common/http';
-import { Observable, throwError, of } from 'rxjs';
+import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, retry, map } from 'rxjs/operators';
 import { Post } from '../models/post.model';
 
@@ -20,6 +20,11 @@ export class ApiClientService {
     }),
   };
 
+  private postsSubject = new BehaviorSubject<Post[]>([]);
+  private paginatedPostsSubject = new BehaviorSubject<Post[]>([]);
+  private currentPage = 1;
+  private pageSize = 10;
+
   constructor(private http: HttpClient) {}
 
   // GET: Fetch all posts
@@ -30,22 +35,43 @@ export class ApiClientService {
     );
   }
 
+  // Initialize data fetching
+  initializePosts(): void {
+    this.getPosts().subscribe(
+      (posts) => {
+        this.postsSubject.next(posts);
+        this.paginatePosts();
+      },
+      (error) => {
+        console.error('Error fetching posts', error);
+      }
+    );
+  }
+
+  // GET: Fetch paginated posts
+  getPaginatedPosts(): Observable<Post[]> {
+    return this.paginatedPostsSubject.asObservable();
+  }
+
+  // Handle pagination logic
+  goToPage(page: number): void {
+    this.currentPage = page;
+    this.paginatePosts();
+  }
+
+  private paginatePosts(): void {
+    const posts = this.postsSubject.getValue();
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    const paginatedPosts = posts.slice(startIndex, endIndex);
+    this.paginatedPostsSubject.next(paginatedPosts);
+  }
+
   // GET: Fetch a single post by ID
   getPost(id: number): Observable<Post> {
     return this.http
       .get<Post>(`${this.API_URL}/${id}`)
       .pipe(retry(3), catchError(this.handleError));
-  }
-
-  // GET: Fetch paginated posts
-  getPaginatedPosts(page: number, pageSize: number): Observable<Post[]> {
-    return this.getPosts().pipe(
-      map((posts) => {
-        const startIndex = (page - 1) * pageSize;
-        const endIndex = startIndex + pageSize;
-        return posts.slice(startIndex, endIndex);
-      })
-    );
   }
 
   // POST: Create a new post

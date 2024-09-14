@@ -1,3 +1,7 @@
-<div class="w-[112px] py-2 px-5 bg-blue-color rounded-xl rounded-bl-none rounded-tl-none cursor-pointer">
-    <p>Subscribe</p>
-</div>
+<button
+  [ngClass]="additionalClasses"
+  [disabled]="disabled"
+  class="w-[112px] py-2 px-5 bg-blue-color rounded-xl rounded-bl-none rounded-tl-none cursor-pointer"
+>
+  {{ text }}
+</button>

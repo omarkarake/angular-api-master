@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Post } from '../../models/post.model';
 import { ApiClientService } from '../../services/api-client.service';
 import { PostDetailResolver } from './post-detail-resolver.service';
+import { Observable } from 'rxjs';
+import {Comment} from '../../models/comment.model';
 
 @Component({
   selector: 'app-post-detail',
@@ -14,6 +16,7 @@ export class PostDetailComponent implements OnInit {
   isLoading: boolean = false;
   id: number | undefined;
   deletingPostId: number | null = null; // Track the deleting state for each post
+  comments: Observable<Comment[]> | undefined;
 
   constructor(
     private route: ActivatedRoute,
@@ -31,6 +34,10 @@ export class PostDetailComponent implements OnInit {
       this.post = data['post'];
     });
     console.log(this.post);
+    this.comments = this.resolver.comments;
+    this.comments.subscribe((comments) => {
+      console.log('comments: ', comments);
+    });
   }
 
   deletePost(postId: number): void {

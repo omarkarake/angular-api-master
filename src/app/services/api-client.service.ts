@@ -1,15 +1,22 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError, BehaviorSubject } from 'rxjs';
-import { catchError, retry, tap } from 'rxjs/operators';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+} from '@angular/common/http';
+import { Observable, throwError, BehaviorSubject, of } from 'rxjs';
+import { catchError, map, retry, tap } from 'rxjs/operators';
 import { Post } from '../models/post.model';
 import { ToastrService } from 'ngx-toastr';
+import { Comment } from '../models/comment.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiClientService {
   private readonly API_URL = 'https://jsonplaceholder.typicode.com/posts';
+  private readonly COMMENTS_URL =
+    'https://jsonplaceholder.typicode.com/comments';
 
   private httpOptions = {
     headers: new HttpHeaders({
@@ -73,14 +80,26 @@ export class ApiClientService {
       .pipe(retry(3), catchError(this.handleError.bind(this)));
   }
 
+  // GET: Fetch comments for a post
+  getComments(postId: number): Observable<Comment[]> {
+    return this.http
+      .get<Comment[]>(`${this.COMMENTS_URL}?postId=${postId}`)
+      .pipe(
+        retry(3), // Retry the request up to 3 times on failure
+        map((comments) => (Array.isArray(comments) ? comments : [])), // Emit empty array if response is not an array
+        catchError((error) => {
+          console.error('Error fetching comments:', error);
+          return of([]); // Emit empty array in case of error
+        })
+      );
+  }
+
   // POST: Create a new post
   createPost(post: Post): Observable<Post> {
-    return this.http
-      .post<Post>(this.API_URL, post, this.httpOptions)
-      .pipe(
-        tap(() => this.toastr.success('Post created successfully!')),
-        catchError(this.handleError.bind(this))
-      );
+    return this.http.post<Post>(this.API_URL, post, this.httpOptions).pipe(
+      tap(() => this.toastr.success('Post created successfully!')),
+      catchError(this.handleError.bind(this))
+    );
   }
 
   // PUT: Update an existing post

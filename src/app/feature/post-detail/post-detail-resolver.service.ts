@@ -8,6 +8,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { tap, finalize } from 'rxjs/operators';
 import { ApiClientService } from '../../services/api-client.service';
 import { Post } from '../../models/post.model';
+import { Comment } from '../../models/comment.model';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +17,7 @@ export class PostDetailResolver implements Resolve<Post> {
   private loadingSubject = new BehaviorSubject<boolean>(false);
   loading$ = this.loadingSubject.asObservable();
   id: number | undefined;
+  comments!: Observable<Comment[]>;
 
   constructor(private apiClientService: ApiClientService) {}
 
@@ -25,8 +27,13 @@ export class PostDetailResolver implements Resolve<Post> {
   ): Observable<Post> {
     const postId = route.paramMap.get('id');
     this.id = +postId!;
-    console.log(this.id, ": in resolver");
+    console.log(this.id, ': in resolver');
     this.loadingSubject.next(true); // Set loading state to true
+
+    this.comments = this.apiClientService.getComments(+postId!).pipe(
+      tap(() => this.loadingSubject.next(false)), // Set loading state to false on success
+      finalize(() => this.loadingSubject.next(false)) // Ensure loading state is false on completion
+    );
 
     return this.apiClientService.getPost(+postId!).pipe(
       tap(() => this.loadingSubject.next(false)), // Set loading state to false on success

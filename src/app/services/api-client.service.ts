@@ -1,9 +1,7 @@
+// src/app/services/api-client.service.ts
+
 import { Injectable } from '@angular/core';
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpHeaders,
-} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError, BehaviorSubject, of } from 'rxjs';
 import { catchError, finalize, map, retry, tap } from 'rxjs/operators';
 import { Post } from '../models/post.model';
@@ -11,14 +9,17 @@ import { ToastrService } from 'ngx-toastr';
 import { Comment } from '../models/comment.model';
 import { ErrorHandlerService } from './error-handler.service';
 
+interface CacheEntry {
+  data: any;
+  expiration: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class ApiClientService {
   private readonly API_URL = 'https://jsonplaceholder.typicode.com/posts';
-  private readonly COMMENTS_URL =
-    'https://jsonplaceholder.typicode.com/comments';
-
+  private readonly COMMENTS_URL = 'https://jsonplaceholder.typicode.com/comments';
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
@@ -34,17 +35,27 @@ export class ApiClientService {
   private loadingPostSubject = new BehaviorSubject<boolean>(false);
   loadingPosts$ = this.loadingPostSubject.asObservable();
 
+  private cache = new Map<string, CacheEntry>();
+  private cacheDuration = 300000; // Cache duration in milliseconds (5 minutes)
+
   constructor(
     private http: HttpClient,
     private toastr: ToastrService,
     private errorHandler: ErrorHandlerService
   ) {}
 
-  // GET: Fetch all posts
+  // GET: Fetch all posts with caching
   getPosts(): Observable<Post[]> {
+    const cacheKey = this.API_URL;
+    const cachedResponse = this.getCachedResponse(cacheKey);
+    if (cachedResponse) {
+      return of(cachedResponse);
+    }
+
     this.loadingPostSubject.next(true);
     return this.http.get<Post[]>(this.API_URL).pipe(
       retry(3), // Retry up to 3 times before failing
+      tap((posts) => this.setCache(cacheKey, posts)), // Cache the response
       catchError(this.handleError.bind(this)), // Handle errors
       finalize(() => this.loadingPostSubject.next(false)) // Set loading state to false on success
     );
@@ -82,11 +93,19 @@ export class ApiClientService {
     this.paginatedPostsSubject.next(paginatedPosts);
   }
 
-  // GET: Fetch a single post by ID
+  // GET: Fetch a single post by ID with caching
   getPost(id: number): Observable<Post> {
-    return this.http
-      .get<Post>(`${this.API_URL}/${id}`)
-      .pipe(retry(3), catchError(this.handleError.bind(this)));
+    const cacheKey = `${this.API_URL}/${id}`;
+    const cachedResponse = this.getCachedResponse(cacheKey);
+    if (cachedResponse) {
+      return of(cachedResponse);
+    }
+
+    return this.http.get<Post>(cacheKey).pipe(
+      retry(3), // Retry up to 3 times before failing
+      tap((post) => this.setCache(cacheKey, post)), // Cache the response
+      catchError(this.handleError.bind(this)) // Handle errors
+    );
   }
 
   // GET: Fetch comments for a post
@@ -147,6 +166,27 @@ export class ApiClientService {
 
   getPostToUpdate(): Observable<Post | null> {
     return this.postToUpdateSubject.asObservable();
+  }
+
+  // Caching helper methods
+  private setCache(key: string, data: any): void {
+    const expiration = Date.now() + this.cacheDuration;
+    this.cache.set(key, { data, expiration });
+  }
+
+  private getCachedResponse(key: string): any | null {
+    const cached = this.cache.get(key);
+    if (cached && cached.expiration > Date.now()) {
+      console.log('Returning cached response for:', key);
+      return cached.data;
+    }
+    return null;
+  }
+
+  // Method to clear the cache
+  clearCache(): void {
+    this.cache.clear();
+    console.log('Cache cleared');
   }
 
   // Error handling

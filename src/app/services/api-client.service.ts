@@ -1,13 +1,18 @@
 // src/app/services/api-client.service.ts
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+} from '@angular/common/http';
 import { Observable, throwError, BehaviorSubject, of } from 'rxjs';
 import { catchError, finalize, map, retry, tap } from 'rxjs/operators';
 import { Post } from '../models/post.model';
 import { ToastrService } from 'ngx-toastr';
 import { Comment } from '../models/comment.model';
 import { ErrorHandlerService } from './error-handler.service';
+import { environment } from '../../environments/environment';
 
 interface CacheEntry {
   data: any;
@@ -18,8 +23,11 @@ interface CacheEntry {
   providedIn: 'root',
 })
 export class ApiClientService {
-  private readonly API_URL = 'https://jsonplaceholder.typicode.com/posts';
-  private readonly COMMENTS_URL = 'https://jsonplaceholder.typicode.com/comments';
+  // private readonly API_URL = 'https://jsonplaceholder.typicode.com/posts';
+  private readonly API_URL = environment.apiUrl;
+  // private readonly COMMENTS_URL =
+  //   'https://jsonplaceholder.typicode.com/comments';
+  private readonly COMMENTS_URL = environment.commentsUrl;
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',

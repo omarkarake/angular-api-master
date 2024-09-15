@@ -14,6 +14,19 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
+## Test the Application with Different Environments
+
+Run the application in different environments to ensure that it uses the correct API URLs:
+
+Development:
+ng serve --configuration=development
+
+Staging:
+ng serve --configuration=staging
+
+Production:
+ng serve --configuration=production
+
 ## Running unit tests
 
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).

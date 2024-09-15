@@ -9,6 +9,7 @@ import { catchError, finalize, map, retry, tap } from 'rxjs/operators';
 import { Post } from '../models/post.model';
 import { ToastrService } from 'ngx-toastr';
 import { Comment } from '../models/comment.model';
+import { ErrorHandlerService } from './error-handler.service';
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +34,11 @@ export class ApiClientService {
   private loadingPostSubject = new BehaviorSubject<boolean>(false);
   loadingPosts$ = this.loadingPostSubject.asObservable();
 
-  constructor(private http: HttpClient, private toastr: ToastrService) {}
+  constructor(
+    private http: HttpClient,
+    private toastr: ToastrService,
+    private errorHandler: ErrorHandlerService
+  ) {}
 
   // GET: Fetch all posts
   getPosts(): Observable<Post[]> {
@@ -146,16 +151,6 @@ export class ApiClientService {
 
   // Error handling
   private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'An unknown error occurred!';
-    if (error.error instanceof ErrorEvent) {
-      // Client-side errors
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      // Server-side errors
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-    }
-    this.toastr.error(errorMessage, 'Error');
-    console.error(errorMessage);
-    return throwError(() => new Error(errorMessage));
+    return this.errorHandler.handleError(error);
   }
 }

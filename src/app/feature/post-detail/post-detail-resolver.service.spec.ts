@@ -1,5 +1,3 @@
-// src/feature/post-detail-resolver.service.spec.ts
-
 import { TestBed } from '@angular/core/testing';
 import { PostDetailResolver } from './post-detail-resolver.service';
 import { ApiClientService } from '../../services/api-client.service';

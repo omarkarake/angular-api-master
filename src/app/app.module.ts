@@ -7,7 +7,6 @@ import { ButtonComponent } from './components/button/button.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { InputsComponent } from './components/inputs/inputs.component';
-import { CardComponent } from './components/card/card.component';
 import { PostModalComponent } from './modal/post-modal/post-modal.component';
 import { PaginationComponent } from './pagination/pagination/pagination.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
@@ -25,7 +24,6 @@ import { ToastrModule } from 'ngx-toastr';
     NavigationComponent,
     FooterComponent,
     InputsComponent,
-    CardComponent,
     PostModalComponent,
     PaginationComponent,
     HomeComponent,

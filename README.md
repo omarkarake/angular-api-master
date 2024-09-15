@@ -1,6 +1,6 @@
 # Angular API Master
 
-hosted version link: https://chic-puppy-a08fe5.netlify.app/home
+hosted version link: https://angular-api-master-ten.vercel.app/
 
 ## Project Description
 
